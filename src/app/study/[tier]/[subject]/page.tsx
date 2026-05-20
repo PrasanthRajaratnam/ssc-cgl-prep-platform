@@ -3,14 +3,14 @@ import Link from 'next/link';
 import { topics } from '@/data/topics';
 
 interface Props {
-  params: {
+  params: Promise<{
     tier: string;
     subject: string;
-  };
+  }>;
 }
 
-export default function SubjectPage({ params }: Props) {
-  const { tier, subject } = params;
+export default async function SubjectPage({ params }: Props) {
+  const { tier, subject } = await params;
   const tierNormalized = tier.replace(/-/g, ' ').toLowerCase();
   const subjectNormalized = subject.replace(/-/g, ' ').toLowerCase();
   // Filter topics belonging to this tier & subject

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { topics } from '@/data/topics';
+import { Topic, topics } from '@/data/topics';
 
 interface SidebarProps {
   currentTier?: string;
@@ -13,10 +13,10 @@ interface SidebarProps {
  */
 export default function Sidebar({ currentTier, currentSubject, currentTopic }: SidebarProps) {
   // Build a nested structure: tier -> subject -> topics
-  const grouped: Record<string, Record<string, typeof topics>> = {};
+  const grouped: Record<string, Record<string, Topic[]>> = {};
   topics.forEach((topic) => {
-    if (!grouped[topic.tier]) grouped[topic.tier] = {} as any;
-    if (!grouped[topic.tier][topic.subject]) grouped[topic.tier][topic.subject] = [] as any;
+    if (!grouped[topic.tier]) grouped[topic.tier] = {};
+    if (!grouped[topic.tier][topic.subject]) grouped[topic.tier][topic.subject] = [];
     grouped[topic.tier][topic.subject].push(topic);
   });
 

@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
 import { useInterval } from '@/hooks/useInterval';
 
 interface TimerProps {
@@ -15,6 +17,7 @@ interface TimerProps {
 export default function Timer({ initialSeconds, onExpire, examMode = false }: TimerProps) {
   const [seconds, setSeconds] = useState(initialSeconds);
   const [running, setRunning] = useState(true);
+  const expiredRef = useRef(false);
 
   useInterval(
     () => {
@@ -26,8 +29,8 @@ export default function Timer({ initialSeconds, onExpire, examMode = false }: Ti
   );
 
   useEffect(() => {
-    if (seconds === 0) {
-      setRunning(false);
+    if (seconds === 0 && !expiredRef.current) {
+      expiredRef.current = true;
       onExpire();
     }
   }, [seconds, onExpire]);

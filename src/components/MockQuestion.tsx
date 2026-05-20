@@ -1,3 +1,5 @@
+'use client';
+
 import { Question } from '@/data/questions';
 import { ChangeEvent } from 'react';
 

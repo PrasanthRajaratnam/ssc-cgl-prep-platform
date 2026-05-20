@@ -1,18 +1,22 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { topics } from '@/data/topics';
+import { questions } from '@/data/questions';
 
 interface Props {
-  params: { tier: string; subject: string };
+  params: Promise<{ tier: string; subject: string }>;
 }
 
-export default function SubjectMockPage({ params }: Props) {
-  const { tier, subject } = params;
+export default async function SubjectMockPage({ params }: Props) {
+  const { tier, subject } = await params;
   const tierNormalized = tier.replace(/-/g, ' ').toLowerCase();
   const subjectNormalized = subject.replace(/-/g, ' ').toLowerCase();
   // Filter topics for this tier and subject
   const filtered = topics.filter(
-    (t) => t.tier.toLowerCase() === tierNormalized && t.subject.toLowerCase() === subjectNormalized
+    (t) =>
+      t.tier.toLowerCase() === tierNormalized &&
+      t.subject.toLowerCase() === subjectNormalized &&
+      questions.some((q) => q.tier === t.tier && q.topic === t.slug)
   );
   if (filtered.length === 0) return notFound();
   return (

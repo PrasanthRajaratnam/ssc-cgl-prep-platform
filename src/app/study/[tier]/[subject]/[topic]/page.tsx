@@ -4,15 +4,15 @@ import TopicContent from '@/components/TopicContent';
 import { topics } from '@/data/topics';
 
 interface Props {
-  params: {
+  params: Promise<{
     tier: string;
     subject: string;
     topic: string;
-  };
+  }>;
 }
 
-export default function TopicPage({ params }: Props) {
-  const { tier, subject, topic } = params;
+export default async function TopicPage({ params }: Props) {
+  const { tier, subject, topic } = await params;
   const tierNormalized = tier.replace(/-/g, ' ').toLowerCase();
   const subjectNormalized = subject.replace(/-/g, ' ').toLowerCase();
   const topicSlug = topic;

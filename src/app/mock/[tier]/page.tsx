@@ -1,19 +1,24 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { topics } from '@/data/topics';
+import { questions } from '@/data/questions';
 
 interface Props {
-  params: { tier: string };
+  params: Promise<{ tier: string }>;
 }
 
-export default function TierMockPage({ params }: Props) {
-  const { tier } = params;
+export default async function TierMockPage({ params }: Props) {
+  const { tier } = await params;
   const tierNormalized = tier.replace(/-/g, ' ').toLowerCase();
   // Collect unique subjects for this tier
   const subjects = Array.from(
     new Set(
       topics
-        .filter((t) => t.tier.toLowerCase() === tierNormalized)
+        .filter(
+          (t) =>
+            t.tier.toLowerCase() === tierNormalized &&
+            questions.some((q) => q.tier === t.tier && q.topic === t.slug)
+        )
         .map((t) => t.subject)
     )
   );

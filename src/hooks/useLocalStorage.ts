@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 /**
  * A custom hook that synchronizes a state value with localStorage.
@@ -7,19 +7,20 @@ import { useState, useEffect } from 'react';
  * @param initialValue The default value if nothing exists in localStorage
  */
 export function useLocalStorage<T>(key: string, initialValue: T) {
-  const [storedValue, setStoredValue] = useState<T>(initialValue);
-
-  useEffect(() => {
+  const readValue = () => {
     if (typeof window === 'undefined') return;
     try {
       const item = window.localStorage.getItem(key);
       if (item) {
-        setStoredValue(JSON.parse(item));
+        return JSON.parse(item) as T;
       }
     } catch (error) {
       console.error('Error reading localStorage key', key, error);
     }
-  }, [key]);
+    return initialValue;
+  };
+
+  const [storedValue, setStoredValue] = useState<T>(() => readValue() ?? initialValue);
 
   const setValue = (value: T) => {
     try {
